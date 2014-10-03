@@ -50,9 +50,9 @@ function handleResponse(responseText) {
 		var message = messages[i][0];
 		console.log(messages[i])
 		message.timeDate = new Date(Number(message.time))
-		var div = document.createElement("div");
-		div.innerHTML = message.timeDate.toLocaleString()+" "+message._owner+" "+message.task;
-		out.appendChild(div);
+		var tr = document.createElement("tr");
+		tr.innerHTML = "<td> "+message._owner+" </td><td>"+ message.task +"</td>";
+		out.appendChild(tr);
 	}
 	document.getElementById("chat").style.visibility = "visible"
 	// wait for 100ms then reload when there's new data.  If data

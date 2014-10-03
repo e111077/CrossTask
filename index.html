@@ -22,7 +22,15 @@
 	<div id="chat" style="visibility: hidden;">
 	<hr/>
 	<h2>Public Messages:</h2>
-	<div id="out"></div>
+	<div>
+		<table id="out" style="width:100%">
+		  <tr>
+		    <td>Username</td>
+		    <td>Item</td> 
+		    <td>Completed</td>
+		  </tr>
+		</table>
+	</div>
 
 	<form action="#" onsubmit="newmsg();return false;" >
 	<p>Message:<input id="message" type="text" placeholder="Say something to the world!" size="80"/></p>
