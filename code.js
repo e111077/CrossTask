@@ -48,12 +48,31 @@ function handleResponse(responseText) {
 	while(out.firstChild) { out.removeChild(out.firstChild) }
 	for (i=0; i<messages.length; i++) {
 		var message = messages[i][0];
-		console.log(messages[i])
+		var completed = messages[1];
 		message.timeDate = new Date(Number(message.time))
 		var tr = document.createElement("tr");
-		tr.innerHTML = "<td> "+message._owner+" </td><td>"+ message.task +"</td><td><input type='checkbox' id='"+ etag+"'></td>";
+		if (completed) {
+			tr.innerHTML = "<td> "+message._owner+" </td><td>"+ message.task +"</td><td><input type='checkbox' id='"+ etag +"'></td>";
+		} else {
+			tr.innerHTML = "<td> "+message._owner+" </td><td>"+ message.task +"</td><td><input type='checkbox' id='"+ etag +"' checked></td>";
+		}
 		out.appendChild(tr);
 	}
+
+	$('[type="checkbox"]').click(function(){
+		var etag = this.id;
+		var request = new XMLHttpRequest();
+		request.open("PUT", podURL());
+    	request.onreadystatechange = function() {
+            if (request.readyState==4 && request.status==201) {
+				// why does this always print null, even though it's not?
+				// console.log("Location:", request.getResponseHeader("Location"));
+     		}
+		}
+		request.setRequestHeader("Content-type", "application/json");
+		var content = JSON.stringify({completed:this.checked});
+		request.send(content);
+	});
 	document.getElementById("chat").style.visibility = "visible"
 	
 	// wait for 100ms then reload when there's new data.  If data
@@ -67,7 +86,7 @@ function newmsg() {
 	document.getElementById("message").value = "";
     if (message) {
      	var request = new XMLHttpRequest();
-	    request.open("POST", podURL());
+	    request.open("POST", podURL()+'r'+etag);
     	request.onreadystatechange = function() {
             if (request.readyState==4 && request.status==201) {
 				// why does this always print null, even though it's not?
