@@ -5,7 +5,6 @@ var etag=null;
 function podURL() {
 	// temporary hack until we have a nice way for users to select their pod
 	//return "http://"+document.getElementById("username").value+".fakepods.com";
-	return document.getElementById("podurl").value
 }
 
 
@@ -36,8 +35,8 @@ function handleResponse(responseText) {
 	for (var i=0; i<all.length; i++) {
 		var item = all[i];
 		// consider the 'text' property to be the essential one
-		if ('text' in item) {
-			messages.push(item)
+		if ('task' in item && 'completed' in item) {
+			messages.push([item, completed])
 		}
 	}
 	messages.sort(function(a,b){return a.time-b.time});
@@ -46,7 +45,7 @@ function handleResponse(responseText) {
 	var out = document.getElementById("out")
 	while(out.firstChild) { out.removeChild(out.firstChild) }
 	for (i=0; i<messages.length; i++) {
-		var message = messages[i];
+		var message = messages[i][0];
 		message.timeDate = new Date(Number(message.time))
 		var div = document.createElement("div");
 		div.innerHTML = message.timeDate.toLocaleString()+" "+message._owner+" "+message.text;
