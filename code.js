@@ -31,11 +31,11 @@ function reload() {
 function handleResponse(responseText) {
 	var responseJSON = JSON.parse(responseText);
 	etag = responseJSON._etag;
-	var completed = responseJSON.completed;
 	var all = responseJSON._members;
 	var messages = [];
 	for (var i=0; i<all.length; i++) {
 		var item = all[i];
+		var completed = item.completed;
 		// consider the 'text' property to be the essential one
 		if ('task' in item && 'completed' in item) {
 			messages.push([item, completed])
@@ -48,9 +48,10 @@ function handleResponse(responseText) {
 	while(out.firstChild) { out.removeChild(out.firstChild) }
 	for (i=0; i<messages.length; i++) {
 		var message = messages[i][0];
+		console.log(messages[i])
 		message.timeDate = new Date(Number(message.time))
 		var div = document.createElement("div");
-		div.innerHTML = message.timeDate.toLocaleString()+" "+message._owner+" "+message.text;
+		div.innerHTML = message.timeDate.toLocaleString()+" "+message._owner+" "+message.task;
 		out.appendChild(div);
 	}
 	document.getElementById("chat").style.visibility = "visible"
