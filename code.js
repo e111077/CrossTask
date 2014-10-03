@@ -41,7 +41,7 @@ function handleResponse(responseText) {
 			messages.push([item, completed])
 		}
 	}
-	messages.sort(function(a,b){return a.time-b.time});
+	messages.sort(function(a){return a._owner});
 	
 	// not being clever, just remove and re-create the whole "out" element
 	var out = document.getElementById("out")
@@ -62,7 +62,7 @@ function handleResponse(responseText) {
 	$('[type="checkbox"]').click(function(){
 		var etag = this.id;
 		var request = new XMLHttpRequest();
-		request.open("PUT", podURL());
+		request.open("PUT", podURL()+'r'+etag);
     	request.onreadystatechange = function() {
             if (request.readyState==4 && request.status==201) {
 				// why does this always print null, even though it's not?
@@ -86,7 +86,7 @@ function newmsg() {
 	document.getElementById("message").value = "";
     if (message) {
      	var request = new XMLHttpRequest();
-	    request.open("POST", podURL()+'r'+etag);
+	    request.open("POST", podURL());
     	request.onreadystatechange = function() {
             if (request.readyState==4 && request.status==201) {
 				// why does this always print null, even though it's not?
