@@ -85,7 +85,7 @@ function newmsg() {
 	document.getElementById("message").value = "";
     if (message) {
      	var request = new XMLHttpRequest();
-	    request.open("POST", podURL());
+	    request.open("POST", podURL()+'r'+etag);
     	request.onreadystatechange = function() {
             if (request.readyState==4 && request.status==201) {
 				// why does this always print null, even though it's not?
