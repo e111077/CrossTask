@@ -72,7 +72,7 @@ function newmsg() {
      		}
 		}
 		request.setRequestHeader("Content-type", "application/json");
-		var content = JSON.stringify({text:message, completed:false});
+		var content = JSON.stringify({task:message, completed:false});
 		request.send(content);
 	} 
 }
