@@ -41,7 +41,11 @@ function handleResponse(responseText) {
 			messages.push([item, completed])
 		}
 	}
-	messages.sort(function(a){return a._owner});
+	messages.sort(function(a, b){
+    if(a._owner < b._owner) return -1;
+    if(a._owner > b._owner) return 1;
+    return 0;
+	});
 	
 	// not being clever, just remove and re-create the whole "out" element
 	var out = document.getElementById("out")
