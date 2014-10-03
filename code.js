@@ -31,6 +31,7 @@ function reload() {
 function handleResponse(responseText) {
 	var responseJSON = JSON.parse(responseText);
 	etag = responseJSON._etag;
+	var completed = responseJSON.completed;
 	var all = responseJSON._members;
 	var messages = [];
 	for (var i=0; i<all.length; i++) {
