@@ -51,7 +51,7 @@ function handleResponse(responseText) {
 		console.log(messages[i])
 		message.timeDate = new Date(Number(message.time))
 		var tr = document.createElement("tr");
-		tr.innerHTML = "<td> "+message._owner+" </td><td>"+ message.task +"</td><td><input type='checkbox'></td>";
+		tr.innerHTML = "<td> "+message._owner+" </td><td>"+ message.task +"</td><td><input type='checkbox' id='"+ etag+"'></td>";
 		out.appendChild(tr);
 	}
 	document.getElementById("chat").style.visibility = "visible"
