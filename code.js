@@ -55,6 +55,7 @@ function handleResponse(responseText) {
 		out.appendChild(tr);
 	}
 	document.getElementById("chat").style.visibility = "visible"
+	
 	// wait for 100ms then reload when there's new data.  If data
 	// comes faster than that, we don't really want it.
 	setTimeout(reload, 50);
