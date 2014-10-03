@@ -72,7 +72,7 @@ function newmsg() {
      		}
 		}
 		request.setRequestHeader("Content-type", "application/json");
-		var content = JSON.stringify({text:message, time:Date.now()});
+		var content = JSON.stringify({text:message, completed:false});
 		request.send(content);
 	} 
 }
