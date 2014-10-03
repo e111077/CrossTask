@@ -5,6 +5,7 @@ var etag=null;
 function podURL() {
 	// temporary hack until we have a nice way for users to select their pod
 	//return "http://"+document.getElementById("username").value+".fakepods.com";
+	return document.getElementById("podurl").value
 }
 
 
