@@ -49,7 +49,6 @@ function handleResponse(responseText) {
 	for (i=0; i<messages.length; i++) {
 		var message = messages[i][0];
 		var completed = messages[1];
-		console.log(messages[i])
 		message.timeDate = new Date(Number(message.time))
 		var tr = document.createElement("tr");
 		if (completed) {
@@ -61,7 +60,8 @@ function handleResponse(responseText) {
 	}
 
 	$('[type="checkbox"]').click(function(){
-		var etag = this.attr("id");
+		var etag = this.id;
+		var request = new XMLHttpRequest();
 		request.open("PUT", podURL());
     	request.onreadystatechange = function() {
             if (request.readyState==4 && request.status==201) {
