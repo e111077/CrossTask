@@ -42,12 +42,9 @@ function handleResponse(responseText) {
 		}
 	}
 	messages.sort(function(a, b){
-		if (a._id > b._id) {
-			return 1;
-		} else  if (a._id < b._id) {
-			return -1;
-		}
-		return 0;
+    if(a._owner < b._owner) return -1;
+    if(a._owner > b._owner) return 1;
+    return 0;
 	});
 	
 	// not being clever, just remove and re-create the whole "out" element
