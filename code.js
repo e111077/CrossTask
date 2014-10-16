@@ -1,6 +1,7 @@
 "use strict";
 
 var etag=null;
+var pod = crosscloud.connect();
 
 function podURL() {
 	// temporary hack until we have a nice way for users to select their pod
