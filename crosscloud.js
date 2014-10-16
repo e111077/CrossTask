@@ -66,14 +66,11 @@
 		that.onLogoutCallbacks = [];
 		that.buffer = [];
 		
-		console.log('PodClient Constructor Called');
 
 		window.addEventListener("message", function(event) {
-			//console.log("got message, checking origin", event);
 
 			if (event.origin !== safeOrigin) return;
 
-			console.log("app<< ", event.data);
 
 			// special messages we handle
 
@@ -96,55 +93,42 @@
 				return;
 			}
 			
-			console.log(90);
 			if (event.data.op === "login") {
-				console.log(900);
 				that.loggedInURL = event.data.podURL;
 				if (!that.loggedInURL) {
 					throw new Error("bad protocol from pod frame");
 				}
-				console.log('callbacks', that.onLoginCallbacks);
 				that.onLoginCallbacks.forEach(function(cb) {
 					cb();
 				});
 				return;
 			}
-			console.log(91);
 
 			if (event.data.op === "logout") {
-				console.log("calling logout handlers:");
 				that.loggedInURL = event.data.podURL;
 				that.onLogoutCallbacks.forEach(function(cb) {
-					console.log("calling logout handler", cb);
 					cb();
 				});
 				return;
 			}
-			console.log(92);
 
 			// other messages handled via callbacks set by pod._newCallback()
 
 			var callback = that.callbacks[event.data.callback];
-			console.log('callback', callback, event.data.callback, that.callbacks);
 			if (callback !== undefined) {
 				if (event.data.releaseCallback) {
 					delete that.callbacks[event.data.callback];
 				}
 				callback(event.data, event.err)
 			} else {
-				console.log('crosscloud.js: received postMessage with unallocated callback handle', event.data.callback);
-				console.log('options', that.callbacks);
 			}
 		}, false);
 
 		if (document.readyState === 'complete' ||
 			document.readyState === 'interactive')   {
-			console.log('was ready', options)
 			that._buildiframe(options)
 		} else {
-			console.log('not ready', options)
 			document.addEventListener("DOMContentLoaded", function(event) {
-				console.log('ready now', options)
 				that._buildiframe(options);
 			}, true);
 		}
@@ -164,16 +148,13 @@
 
 	pod._iframeSet = function(settings) {
 		var that = this;
-		//console.log('setting iframe properties', settings);
 		["top", "left", "right", "position", "width", "height"].forEach(function(prop) {
 			if (prop in settings) {
-				//console.log('setting on div',prop,settings[prop], this.iframediv);
 				this.iframediv.style[prop] = settings[prop]
 			};
 		}, this);
 		["borderRadius", "boxShadow", "width", "height", "overflow"].forEach(function(prop) {
 			if (prop in settings) {
-				//console.log('setting on iframe',prop,settings[prop], this.iframe);
 				this.iframe.style[prop] = settings[prop]
 			};
 		}, this);
@@ -207,19 +188,15 @@
 	}
 
 	pod._sendToLogin = function(message) {
-		console.log("apptoLogin>> ", message);
 		this.iframe.contentWindow.postMessage(message, safeOrigin);
 	}
 
 	pod._sendToPod = function(message) {
-		console.log('this.connected?', this.connected);
 		if (this.connected) {
-			console.log("appToPod>> ", message);
 			message.toPod = true;
 			//this.iframe.contentWindow.postMessage(message, safeOrigin);
 			this.iframe.contentWindow.postMessage(message, "*");
 		} else {
-			console.log("BUFFER appToPod>> ", message);
 			this.buffer.push(message);
 		}
 	}
@@ -232,7 +209,6 @@
 
 
 	pod.test = function(a) {
-		console.log("a was",a);
 		this._sendToPod({op:"pop"});
 	}
 
@@ -326,9 +302,7 @@
 		}
 		if (this.loggedInURL === null) {
 			this.onLoginCallbacks.push(callback);
-			console.log(93, this.onLoginCallbacks);
 		} else {
-			console.log(92, callback);
 			callback();
 		}
 	}
