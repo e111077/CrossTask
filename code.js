@@ -12,30 +12,36 @@ function podURL() {
 
 function reload () {
 
-	var request = new XMLHttpRequest();
+	// var request = new XMLHttpRequest();
 
 	// just fetch everything, for now, since queries don't work yet
-	request.open("GET", podURL()+"/_active", true);
-	if (etag !== null) {
-		request.setRequestHeader("Wait-For-None-Match", etag);
-	}
+	// request.open("GET", podURL()+"/_active", true);
+	// if (etag !== null) {
+	// 	request.setRequestHeader("Wait-For-None-Match", etag);
+	// }
 
-	request.onreadystatechange = function() {
-		if (request.readyState==4 && request.status==200) {
-			console.log("GOT");
-    		handleResponse(request.responseText);
-    	}
- 	}
-
-	request.send();
+	// request.onreadystatechange = function() {
+	// 	if (request.readyState==4 && request.status==200) {
+	// 		console.log("GOT");
+ //    		handleResponse(request.responseText);
+ //    	}
+ // 	}
+ 	pod.query()
+		.filter( {} )
+		.onAllResults(handleResponse)
+		.start();
+	pod.query()
+        .filter( { completed:true } )
+        .onAllResults(crossOut)
+        .start();
+	// request.send();
 }
 
-function handleResponse(responseText) {
-	var responseJSON = JSON.parse(responseText);
-	var all = responseJSON._members;
+function handleResponse(response) {
+	console.log(response)
 	var messages = [];
-	for (var i=0; i<all.length; i++) {
-		var item = all[i];
+	for (var i=0; i<response.length; i++) {
+		var item = response[i];
 		var completed = item.completed;
 		// consider the 'text' property to be the essential one
 		if ('appName' in item && item.appName == "CrossTask") {
@@ -51,6 +57,7 @@ function handleResponse(responseText) {
 	// not being clever, just remove and re-create the whole "out" element
 	var out = document.getElementById("out")
 	while(out.firstChild) { out.removeChild(out.firstChild) }
+
 	for (i=0; i<messages.length; i++) {
 		var message = messages[i];
 		var completed = message.completed;
@@ -68,30 +75,42 @@ function handleResponse(responseText) {
 
 	$('[type="checkbox"]').mouseup(function(){
 		function putData (JSONData, etag) {
-			var request = new XMLHttpRequest();
-			request.open("PUT", podURL()+'/r'+etag);
-	    	request.onreadystatechange = function() {
-	            if (request.readyState==4 && request.status==201) {
-					// why does this always print null, even though it's not?
-					// console.log("Location:", request.getResponseHeader("Location"));
-	     		}
-			}
-			request.setRequestHeader("Content-type", "application/json");
-			var content = JSON.stringify(JSONData);
-			request.send(content);
+			// var request = new XMLHttpRequest();
+			// request.open("PUT", podURL()+'/r'+etag);
+	  //   	request.onreadystatechange = function() {
+	  //           if (request.readyState==4 && request.status==201) {
+			// 		// why does this always print null, even though it's not?
+			// 		// console.log("Location:", request.getResponseHeader("Location"));
+	  //    		}
+			// }
+			// request.setRequestHeader("Content-type", "application/json");
+			// var content = JSON.stringify(JSONData);
+			// request.send(content);
+
+			pod.push(JSONData, newmsg);
 		};
 
-		var request = new XMLHttpRequest();
+
+
+		// var request = new XMLHttpRequest();
 		var etag = this.id;
 		var thisBox = $(this);
-		request.open("GET", podURL()+"/r" + etag, true);
-		request.onreadystatechange = function() {
-			if (request.readyState==4 && request.status==200) {
-	    		var responseJSON = JSON.parse(request.responseText);
-	    		responseJSON.completed = thisBox.is(":checked");
-	    		putData(responseJSON, etag);
-	    	}
-	 	}
+		
+		pod.query().filter({id:etag}).onAllResults(function (items) {
+			var responseJSON = items[0];
+			responseJSON.completed = thisBox.is(":checked");
+		})
+
+		pod.push(JSONData, newmsg);
+
+		// request.open("GET", podURL()+"/r" + etag, true);
+		// request.onreadystatechange = function() {
+		// 	if (request.readyState==4 && request.status==200) {
+	 //    		var responseJSON = JSON.parse(request.responseText);
+	 //    		responseJSON.completed = thisBox.is(":checked");
+	 //    		putData(responseJSON, etag);
+	 //    	}
+	 // 	}
 
 		request.send();
 		reload();
@@ -101,6 +120,13 @@ function handleResponse(responseText) {
 	// wait for 100ms then reload when there's new data.  If data
 	// comes faster than that, we don't really want it.
 	setTimeout(reload, 1000);
+}
+
+function crossOut(items){
+	for (var i=0; i<items.length; i++){
+		//console.log(items[i]);
+		$('#'+items[i].id).css("text-decoration", "line-through");
+	}
 }
 
 function newmsg() {

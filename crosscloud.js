@@ -24,7 +24,7 @@
 // See http://caolanmcmahon.com/posts/writing_for_node_and_the_browser/
 (function(exports){
 
-	exports.version = '!!VERSION!!';
+	exports.version = '0.1.1';
 
 	//
 	//
