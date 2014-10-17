@@ -50,19 +50,24 @@ function handleResponse(response) {
         var thisLine = $($(thisBox.parent()[0]).parent()[0]);
         var podURL = thisLine.children()[0].innerHTML.replace(/\s/g, '');
         console.log(podURL+"/r"+etag)
+
+        console.log("ENTERING MOUSEUP")
         
         pod.query().filter({_id:podURL+"/r"+etag}).onAllResults(function (items) {
-            console.log(items[0])
+
+            console.log(items[0]);
             var responseJSON = items[0];
             responseJSON.completed = thisBox.is(":checked");
             if (responseJSON.completed) {
-                thisLine.css("text-decoration", "none");
-            } else {
                 thisLine.css("text-decoration", "line-through");
+            } else {
+                thisLine.css("text-decoration", "none");
             }
 
             pod.push(responseJSON);
         }).start();
+
+        console.log("DONE")
 
     });
     document.getElementById("chat").style.visibility = "visible"
