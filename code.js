@@ -1,6 +1,6 @@
 "use strict";
 
-var etag=null;
+var etag= null;
 var pod = crosscloud.connect();
 
 function reload () {
@@ -44,32 +44,26 @@ function handleResponse(response) {
         out.appendChild(tr);
     }
 
-    $('[type="checkbox"]').mouseup(function(){
+    $('[type="checkbox"]').on("click", function(){
         var etag = this.id;
         var thisBox = $(this);
         var thisLine = $($(thisBox.parent()[0]).parent()[0]);
         var podURL = thisLine.children()[0].innerHTML.replace(/\s/g, '');
-        console.log(podURL+"/r"+etag)
-        
-        pod.query().filter({_id:podURL+"/r"+etag}).onAllResults(function (items) {
-            console.log(items[0])
-            var responseJSON = items[0];
-            responseJSON.completed = thisBox.is(":checked");
-            if (responseJSON.completed) {
-                thisLine.css("text-decoration", "none");
-            } else {
-                thisLine.css("text-decoration", "line-through");
-            }
+        var responseJSON = {_id:podURL+"/r"+etag};
 
-            pod.push(responseJSON);
-        }).start();
+        console.log(thisBox.is(":checked"));
 
+        responseJSON.completed = thisBox.is(":checked");
+        if (responseJSON.completed) {
+            thisLine.css("text-decoration", "none");
+        } else {
+            thisLine.css("text-decoration", "line-through");
+        }
+
+        pod.push(responseJSON);
     });
-    document.getElementById("chat").style.visibility = "visible"
-    
-    // wait for 100ms then reload when there's new data.  If data
-    // comes faster than that, we don't really want it.
-    setTimeout(reload, 1000);
+
+    document.getElementById("chat").style.visibility = "visible";
 }
 
 function newmsg() {
@@ -78,6 +72,4 @@ function newmsg() {
     if (message) {
         pod.push({task:message, appName:"CrossTask", completed:false});
     } 
-
-    reload();
 }
